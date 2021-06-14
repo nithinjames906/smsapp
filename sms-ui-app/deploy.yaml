@@ -1,0 +1,17 @@
+apiVersion: sms-ui-app/v1
+kind: Deployment
+metadata:
+  name: sms-container
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        label-key : label-value  
+    spec:
+      containers:
+        - name: sms-container
+          image: surveymanagement/sms-ui-app:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80

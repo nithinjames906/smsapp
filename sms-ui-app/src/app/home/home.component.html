@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <h1 *ngIf="currentUser">Hi {{currentUser.userName}}!</h1>
+            <p>Welcome to SMS</p>
+            <p *ngIf="currentUser?.userRole!=='Analytic'">Please find the active surveys as follows.</p>
+            <p *ngIf="currentUser?.userRole=='Analytic'">Please find the survey analytic details as follows.</p>
+        </div>
+    </div>
+</div>
+<div class="container mt-2" *ngIf="currentUser?.userRole!=='Analytic'">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <div class="counter" *ngFor="let survey of surveys">
+                <div class="counter-icon">
+                    <i class="fa fa-globe"></i>
+                </div>
+                <h3>{{survey.title}}</h3>
+                <span class="counter-value" title="Attended Count">
+            <button [disabled]="loading || survey.status === 'COMPLETED'" type="button" (click)="attendSurvey(survey.surveyId)" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> {{survey.status === 'NEW'?'Attend':survey.status === 'INPROGRESS'?'Resume':'Completed'}}
+                </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="currentUser?.userRole=='Analytic'">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <div class="counter" *ngFor="let survey of surveyStats; let i=index;">
+                <div class="counter-icon">
+                    <i class="fa fa-globe"></i>
+                </div>
+                <h3>{{survey.title}}</h3>
+                <span class="counter-value">Completed - {{survey.completedCount}} Attended - {{survey.attendedCount}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="!currentUser">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <p>Your survey response will not be saved. Please login to save your response.</p>
+            <a class="nav-item nav-link" routerLink="/login">login</a>
+            <a class="nav-item nav-link" routerLink="/register">register</a>
+        </div>
+    </div>
+</div>

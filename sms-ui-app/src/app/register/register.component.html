@@ -1,0 +1,34 @@
+<h2>Register</h2>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="userName">User Name</label>
+        <input type="text" formControlName="userName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.userName.errors }" />
+        <div *ngIf="submitted && f.userName.errors" class="invalid-feedback">
+            <div *ngIf="f.userName.errors.required">User Name is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="userRole">User Role</label>
+        <select formControlName="userRole" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.userRole.errors }">
+            <option value="Customer">Customer</option>
+            <option value="Analytic">Analytic</option>
+        </select>
+        <div *ngIf="submitted && f.userRole.errors" class="invalid-feedback">
+            <div *ngIf="f.userRole.errors.required">Role is required</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Register
+        </button>
+        <a routerLink="/" class="btn btn-link">Cancel</a>
+    </div>
+</form>

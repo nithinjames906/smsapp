@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <h1 class="text-center">Surveys</h1>
+            <table class="table table-striped table-bordered container-fluid">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Version</th>
+                        <th scope="col">Created Date</th>
+                        <th scope="col">Updated Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Active</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let survey of surveys; let i=index">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{survey.title}}</td>
+                        <td>{{survey.version}}</td>
+                        <td>{{survey.createdDate}}</td>
+                        <td>{{survey.updatedDate}}</td>
+                        <td>{{survey.status}}</td>
+                        <td>{{survey.isActive?'Yes':'No'}}</td>
+                        <td><button [disabled]="loading" *ngIf="survey.isActive || survey.status==='INPROGRESS'" class="btn btn-primary" (click)="modifySurvey(survey.surveyId)">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Modify
+                </button>&nbsp;
+                            <button [disabled]="loading" *ngIf="survey.status==='INPROGRESS'" class="btn btn-primary" (click)="publishSurvey(survey.surveyId)">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Publish
+                    </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <h2>Add/Modify Survey</h2>
+            <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="title">Survey Title</label>
+                    <input type="text" formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && surveyForm.title.errors }" required>
+                    <div *ngIf="submitted && surveyForm.title.errors" class="invalid-feedback">
+                        <div *ngIf="surveyForm.title.errors.required">Survey Title is required</div>
+                    </div>
+                </div>
+                <div class="form-group" *ngFor="let question of questions().controls; let i=index" style="padding: 10px 0px 20px 0px;">
+                    <legend for="type">Question#{{i+1}}</legend>
+                    <fieldset>
+                        <div formArrayName="questions">
+                            <div [formGroupName]="i">
+                                <div class="form-group">
+                                    <label for="body">Body</label>
+                                    <textarea formControlName="body" class="form-control" [ngClass]="{ 'is-invalid': submitted && surveyForm.body.errors }" required></textarea>
+                                    <div *ngIf="submitted && surveyForm.body.errors" class="invalid-feedback">
+                                        <div *ngIf="questions.controls[i].get('text').errors?.required">Question Body is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="type">Type of Response</label>
+                                    <select formControlName="type" class="form-control" [ngClass]="{ 'is-invalid': submitted && surveyForm.type.errors }" required>
+                                            <option *ngFor="let type of responseTypes" [value]="type">{{type}}</option></select>
+                                    <div *ngIf="submitted && surveyForm.type.errors" class="invalid-feedback">
+                                        <div *ngIf="questions.controls[i].get('type').errors?.required">Type is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group" *ngIf="questions().controls[i].get('type').value == 'CHOICE'">
+                                    <input type="checkbox" formControlName="multiSelect"> Multi Select?
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox" formControlName="required"> Required?
+                                </div>
+                                <div class="form-group" *ngIf="questions().controls[i].get('type').value == 'CHOICE'">
+                                    <legend for="type">Question#{{i+1}} Choices</legend>
+                                    <fieldset>
+                                        <div formArrayName="options">
+                                            <div *ngFor="let option of options(i).controls; let j=index">
+                                                <div [formGroupName]="j" style="padding: 10px 0px 20px 0px;">
+                                                    <div class="form-group">
+                                                        <label for="body">Option {{j+1}}</label>
+                                                        <input formControlName="option" class="form-control" [ngClass]="{ 'is-invalid': submitted && surveyForm.body.errors }" required>
+                                                        <div *ngIf="submitted && surveyForm.option.errors" class="invalid-feedback">
+                                                            <div *ngIf="options(i).controls[j].get('option').errors?.required">Option is required</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <button [disabled]="loading" class="btn btn-primary" style="float: right;" type="button" (click)="removeOption(i,j)">
+                                                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Remove Option</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button [disabled]="loading" class="btn btn-primary" type="button" (click)="addOption(i)">
+                                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Add Option</button>
+                                    </fieldset>
+                                </div>
+                                <button [disabled]="loading" class="btn btn-primary" style="float: right;" type="button" (click)="removeQuestion(i)">
+                                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Remove Question</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" class="btn btn-primary" type="button" (click)="addQuestion()">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Add Question</button>
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" type="submit" class="btn btn-primary" [disabled]="surveyForm.invalid">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Save
+                    </button>
+                    <a routerLink="/home" type="reset" class="btn btn-link">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

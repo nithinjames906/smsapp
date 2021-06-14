@@ -1,0 +1,89 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-9 col-md-12">
+            <form [formGroup]="surveyForm" (ngSubmit)="onSubmit()" *ngIf="!showThanks">
+                <h1 class="text-center">{{survey.title}}</h1>
+                <hr/>
+                <div class="form-group" formArrayName="responseDetails" style="min-height: 300px;">
+                    <div *ngFor="let qtn of responseDetails().controls; let i=index">
+                        <div *ngIf="getSurveyDetailControl(i,'displayed').value">
+                            <div [formGroupName]="i">
+                                <div *ngIf="getSurveyDetailControl(i,'type').value=='FREETEXT'; else choiceBlock">
+                                    <div class="question">
+                                        <legend>Q-{{i+1}}</legend>
+                                        <fieldset>
+                                            <h6>{{getSurveyDetailControl(i,'body').value}}<span *ngIf="getSurveyDetailControl(i,'required').value" class="required">*</span></h6>
+                                            <div formArrayName="responseList">
+                                                <div *ngFor="let option of responseList(i).controls; let j=index;">
+                                                    <p [formGroupName]="j">
+                                                        <input formControlName="response" name="text" required>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <ng-template #choiceBlock>
+
+                                    <div *ngIf="getSurveyDetailControl(i,'multiSelect').value; else singleSelectBlock">
+                                        <div class="question">
+                                            <legend>Q-{{i+1}}</legend>
+                                            <fieldset>
+                                                <h6>{{getSurveyDetailControl(i,'body').value}}<span *ngIf="getSurveyDetailControl(i,'required').value" class="required">*</span></h6>
+                                                <div formArrayName="responseList">
+                                                    <div *ngFor="let opt of responseList(i).controls; let j=index;">
+                                                        <p [formGroupName]="j">
+                                                            <input type="checkbox" id="multiSelect-{{i+j}}" formControlName="response" name="response" #checkboxes required> {{getResponseControl(i,j,'option').value}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <ng-template #singleSelectBlock>
+                                        <div class="question">
+                                            <legend>Q-{{i+1}}</legend>
+                                            <fieldset>
+                                                <h6>{{getSurveyDetailControl(i,'body').value}}<span *ngIf="getSurveyDetailControl(i,'required').value" class="required">*</span></h6>
+                                                <div formArrayName="responseList">
+                                                    <div *ngFor="let opt of responseList(i).controls; let j=index;">
+                                                        <p [formGroupName]="j">
+                                                            <input type="radio" id="singleSelect-{{i+j}}" formControlName="response" name="response" [value]="getResponseControl(i,j,'option').value" #checkboxes required> {{getResponseControl(i,j,'option').value}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </ng-template>
+
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button [disabled]="loading || questionIndex==0" type="button" class="btn btn-primary" (click)="previous()">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Previous
+                    </button>
+                    <button style="float: right;" [disabled]="loading || questionIndex == responseDetails().controls.length-1" type="button" class="btn btn-primary" (click)="next()">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Next
+                    </button>
+                </div>
+                <div class="form-group">
+                    <button style="float: right;" [disabled]="loading" type="submit" class="btn btn-primary">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Save/Submit
+                    </button>
+                    <a style="float: right;" routerLink="/home" type="reset" class="btn btn-link">Cancel</a>
+                </div>
+            </form>
+
+            <div class="text-center" *ngIf="showThanks">
+                <h3>Thankyou for your feedback!</h3> <span>Thanks for your valuable information.</span>
+            </div>
+        </div>
+    </div>
+</div>
